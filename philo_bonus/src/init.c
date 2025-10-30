@@ -44,8 +44,6 @@ void	init_philos(t_philo *philos, t_info *info)
 	}
 	info->start_time = get_current_time();
 	i = 0;
-	while (i < info->philo_count)
-		philos[i++].last_meal = info->start_time;
 	start_philos(philos, info);
 }
 
