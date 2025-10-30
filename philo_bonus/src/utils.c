@@ -5,11 +5,34 @@
 #include <stdio.h>
 #include <limits.h>
 
-void	error_message(char *text, int signal)
+static int	ft_itoa_append(char *buf, int n, int pos)
 {
-	if (text)
-		write(2, text, ft_strlen(text) + 1);
-	exit(signal);
+	char	tmp[32];
+	int		len;
+
+	len = 0;
+	while (n > 0)
+	{
+		tmp[len++] = '0' + (n % 10);
+		n /= 10;
+	}
+	while (len--)
+		buf[pos++] = tmp[len];
+	return (pos);
+}
+
+void	join(char *dest, const char *prefix, int n)
+{
+	int	i;
+
+	i = 0;
+	while (prefix[i])
+	{
+		dest[i] = prefix[i];
+		i++;
+	}
+	i = ft_itoa_append(dest, n, i);
+	dest[i] = '\0';
 }
 
 size_t	ft_strlen(const char *s)
