@@ -122,7 +122,7 @@ void	close_semaphores(t_info *info, t_philo *philos)
 	i = -1;
 	while (++i < info->philo_count)
 	{
-		sprintf(name, "/meal_lock_%d", i + 1);
+		join(name, "/meal_lock_", i + 1);
 		sem_close(philos[i].meal_lock);
 		sem_unlink(name);
 	}
