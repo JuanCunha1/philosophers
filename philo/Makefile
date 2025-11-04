@@ -1,6 +1,6 @@
 NAME			= philo
 CC				= cc
-CFLAGS			= -Wall -Wextra -Werror
+CFLAGS			= -Wall -Wextra -Werror -g
 MKDIR			= mkdir -p
 RM				= rm -rf
 LINKER  	    = -lpthread
@@ -15,8 +15,8 @@ SRCS_DIR		= src/
 SRC_FILES		= main.c \
 				  init.c \
 				  utils.c \
-				  threads.c \
 				  simulation.c \
+				  simulation_helper.c \
 				  messages.c
 
 # Objects
