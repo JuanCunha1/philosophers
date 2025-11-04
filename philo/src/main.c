@@ -13,7 +13,7 @@
 #include <philosopher.h>
 #include <limits.h>
 
-static void	check_arg_content(char **arg, int ac)
+static int	check_arg_content(char **arg, int ac)
 {
 	int	i;
 	int	j;
@@ -26,12 +26,15 @@ static void	check_arg_content(char **arg, int ac)
 			++j;
 		if (arg[i][j] == '+')
 			j++;
-		while (arg[i][j] != '\0' && (arg[i][j] < '0' || arg[i][j] > '9'))
+		while (arg[i][j] != '\0')
 		{
+			if ((arg[i][j] < '0' || arg[i][j] > '9'))
+				return (-1);
 			j++;
 		}
 		i++;
 	}
+	return (0);
 }
 
 static long	ft_atoi(const char *str)
@@ -63,7 +66,8 @@ static int	check_args(int ac, char **av, t_engine *en)
 		return (error_message("incorrect input!\nThe correct one is:\n"
 				"./philo nbr_of_philos time_to_die time_to_eat time_to_sleep"
 				" [nbr_of_times_each_philosopher_must_eat]\n"));
-	check_arg_content(av, ac);
+	if (check_arg_content(av, ac) == -1)
+		return (error_message("Just number allowed\n"));
 	en->philo_count = ft_atoi(av[1]);
 	en->time_to_die = ft_atoi(av[2]);
 	en->time_to_eat = ft_atoi(av[3]);

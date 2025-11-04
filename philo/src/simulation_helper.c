@@ -31,8 +31,6 @@ void	philo_eat(t_philo *philo)
 	pthread_mutex_t	*first_fork;
 	pthread_mutex_t	*second_fork;
 
-	if (philo->id % 2 == 0)
-		usleep(100);
 	first_fork = philo->mutexes.left_fork;
 	second_fork = philo->mutexes.right_fork;
 	if (one_philo(philo, first_fork))
@@ -44,7 +42,8 @@ void	philo_eat(t_philo *philo)
 	philo->times.last_meal = get_current_time();
 	philo->meals_eaten++;
 	pthread_mutex_unlock(&philo->engine->meal_lock);
-	ft_usleep(philo, philo->engine->time_to_eat);
+	if (!meal_eaten(philo))
+		ft_usleep(philo, philo->engine->time_to_eat);
 	pthread_mutex_unlock(second_fork);
 	pthread_mutex_unlock(first_fork);
 }

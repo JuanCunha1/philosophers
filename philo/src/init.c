@@ -57,7 +57,7 @@ void	start_simulation(t_engine *en)
 				&philo_routine, &en->philos[i]) != 0)
 		{
 			destroy_all(en, "Fork Mutex ERROR\n", 1);
-			return ;		
+			return ;
 		}
 	}
 	i = -1;
