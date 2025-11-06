@@ -1,23 +1,29 @@
-NAME			= philo
+NAME			= philo_bonus
 CC				= cc
 CFLAGS			= -Wall -Wextra -Werror
 MKDIR			= mkdir -p
 RM				= rm -rf
 LINKER  	    = -lpthread
 
+# Colors
+
+GREEN			= "\033[0;32m"
+YELLOW			= "\033[1;33m"
+RED				= "\033[0;31m"
+RESET			= "\033[0m"
+
 # Includes
 INCLUDES_DIR 	= include
 INCLUDES_FLAG 	= -I$(INCLUDES_DIR)
-INCLUDES		= $(wildcard $(INCLUDES_DIR)/*.h)
+INCLUDES		= $(wildcard $(INCLUDES_DIR)/philosopher_bonus.h)
 
 # Sources
 SRCS_DIR		= src/
-SRC_FILES		= main.c \
-				  init.c \
-				  utils.c \
-				  threads.c \
-				  simulation.c \
-				  messages.c
+SRC_FILES		= main_bonus.c \
+				  init_bonus.c \
+				  utils_bonus.c \
+				  simulation_bonus.c \
+				  messages_bonus.c
 
 # Objects
 OBJS_DIR		= objs/
@@ -45,6 +51,8 @@ clean :
 fclean : clean
 	@$(RM) $(NAME)
 	@echo $(RED) " - Full Cleaned!" $(RESET)
+
+bonus: all
 
 re: fclean all
 

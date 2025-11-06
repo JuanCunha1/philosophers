@@ -1,9 +1,4 @@
-#include <philosopher.h>
-#include <sys/time.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <limits.h>
+#include <philosopher_bonus.h>
 #include <pthread.h>
 #include <sys/wait.h>
 
@@ -17,12 +12,12 @@ void	one_philo(t_info *info, t_philo *philo)
 		exit(1);
 	}
 }
+
 void	philo_routine(t_philo *philo)
 {
 	t_info	*info;
 
 	info = philo->info;
-	sem_wait(info->ready);
 	philo->last_meal = info->start_time;
 	pthread_create(&philo->monitor, NULL, &monitor_routine, philo);
 	pthread_detach(philo->monitor);
@@ -51,14 +46,6 @@ void	philo_routine(t_philo *philo)
 	}
 }
 
-void	kill_all_philos(t_info *info)
-{
-	int	i;
-
-	i = -1;
-	while (++i < info->philo_count)
-		kill(info->pids[i], SIGKILL);
-}
 void	supervisor(t_info *info)
 {
 	int		status;
@@ -115,14 +102,17 @@ void	close_semaphores(t_info *info, t_philo *philos)
 		sem_close(info->stop);
 	if (info->death)
 		sem_close(info->death);
+	if (info->ready)
+		sem_close(info->ready);
 	sem_unlink("/forks");
 	sem_unlink("/print");
 	sem_unlink("/stop");
 	sem_unlink("/death");
+	sem_unlink("/ready");
 	i = -1;
 	while (++i < info->philo_count)
 	{
-		sprintf(name, "/meal_lock_%d", i + 1);
+		join(name, "/meal_lock_", i + 1);
 		sem_close(philos[i].meal_lock);
 		sem_unlink(name);
 	}

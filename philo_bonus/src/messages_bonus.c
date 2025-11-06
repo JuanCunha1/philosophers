@@ -1,4 +1,4 @@
-#include <philosopher.h>
+#include <philosopher_bonus.h>
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
@@ -16,11 +16,15 @@ void	print_action(t_philo *philo, char *msg)
 
 	sem_wait(philo->info->print);
 	timestamp = get_current_time() - philo->info->start_time;
-	if (!ft_strcmp(msg, "died"))
-	{
-		printf("%ld %d %s\n", timestamp, philo->id, msg);
-		return ;
-	}
 	printf("%ld %d %s\n", timestamp, philo->id, msg);
+	if (!ft_strcmp(msg, "died"))
+		return ;
 	sem_post(philo->info->print);
+}
+
+void	error_message(char *text, int signal)
+{
+	if (text)
+		write(2, text, ft_strlen(text) + 1);
+	exit(signal);
 }

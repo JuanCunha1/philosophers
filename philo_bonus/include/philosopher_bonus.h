@@ -1,13 +1,10 @@
-#ifndef PHILOSOPHER_H
-# define PHILOSOPHER_H
+#ifndef PHILOSOPHER_BONUS_H
+# define PHILOSOPHER_BONUS_H
 
 # include <stdlib.h>
 # include <stdio.h>
 # include <unistd.h>
-# include <sys/time.h>
 # include <semaphore.h>
-# include <signal.h>
-# include <limits.h>
 
 typedef struct s_info	t_info;
 typedef struct s_philo	t_philo;
@@ -40,12 +37,12 @@ struct s_philo
 };
 
 //utils
-long	ft_atoi(const char *str);
+
 void	error_message(char *text, int signal);
 size_t	ft_strlen(const char *s);
 long	get_current_time(void);
 void	ft_usleep(size_t milliseconds);
-
+void	join(char *dest, const char *prefix, int n);
 
 // destroy
 void	print_action(t_philo *philo, char *msg);
@@ -53,7 +50,6 @@ void	print_action(t_philo *philo, char *msg);
 void	philo_routine(t_philo *philo);
 void	*monitor_routine(void *arg);
 void	supervisor(t_info *info);
-void	kill_all_philos(t_info *info);
 
 void	one_philo(t_info *info, t_philo *philo);
 void	close_semaphores(t_info *info, t_philo *philos);
