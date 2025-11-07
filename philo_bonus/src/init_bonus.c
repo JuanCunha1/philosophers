@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_bonus.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jmarques <jmarques@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/07 12:40:48 by jmarques          #+#    #+#             */
+/*   Updated: 2025/11/07 12:40:52 by jmarques         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <philosopher_bonus.h>
 #include <fcntl.h>
 #include <signal.h>
@@ -20,7 +32,7 @@ static void	start_philos(t_philo *philos, t_info *info)
 		if (info->pids[i] == 0)
 		{
 			sem_wait(info->ready);
-			philo_routine(&philos[i]);
+			philo_routine(&philos[i], info);
 			exit(1);
 		}
 		i++;
@@ -36,8 +48,8 @@ void	init_philos(t_philo *philos, t_info *info)
 	char	name[32];
 
 	i = -1;
-    while (++i < info->philo_count)
-    {
+	while (++i < info->philo_count)
+	{
 		philos[i].id = i + 1;
 		philos[i].info = info;
 		philos[i].meals_eaten = 0;

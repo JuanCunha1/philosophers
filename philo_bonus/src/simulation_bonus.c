@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   simulation_bonus.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jmarques <jmarques@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/07 12:44:18 by jmarques          #+#    #+#             */
+/*   Updated: 2025/11/07 12:44:21 by jmarques         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <philosopher_bonus.h>
 #include <pthread.h>
 #include <sys/wait.h>
@@ -13,11 +25,26 @@ void	one_philo(t_info *info, t_philo *philo)
 	}
 }
 
-void	philo_routine(t_philo *philo)
+static void	philo_routine_helper(t_philo *philo, t_info *info)
 {
-	t_info	*info;
+	sem_wait(info->forks);
+	print_action(philo, "has taken a fork");
+	sem_wait(info->forks);
+	print_action(philo, "has taken a fork");
+	sem_wait(philo->meal_lock);
+	philo->last_meal = get_current_time();
+	sem_post(philo->meal_lock);
+	print_action(philo, "is eating");
+	ft_usleep(info->time_to_eat);
+	philo->meals_eaten++;
+	sem_post(info->forks);
+	sem_post(info->forks);
+	if (info->must_eat != -1 && philo->meals_eaten >= info->must_eat)
+		exit(0);
+}
 
-	info = philo->info;
+void	philo_routine(t_philo *philo, t_info *info)
+{
 	philo->last_meal = info->start_time;
 	pthread_create(&philo->monitor, NULL, &monitor_routine, philo);
 	pthread_detach(philo->monitor);
@@ -26,20 +53,7 @@ void	philo_routine(t_philo *philo)
 		ft_usleep(10);
 	while (1)
 	{
-		sem_wait(info->forks);
-		print_action(philo, "has taken a fork");
-		sem_wait(info->forks);
-		print_action(philo, "has taken a fork");
-		sem_wait(philo->meal_lock);
-		philo->last_meal = get_current_time();
-		sem_post(philo->meal_lock);
-		print_action(philo, "is eating");
-		ft_usleep(info->time_to_eat);
-		philo->meals_eaten++;
-		sem_post(info->forks);
-		sem_post(info->forks);
-		if (info->must_eat != -1 && philo->meals_eaten >= info->must_eat)
-			exit(0);
+		philo_routine_helper(philo, info);
 		print_action(philo, "is sleeping");
 		ft_usleep(info->time_to_sleep);
 		print_action(philo, "is thinking");
@@ -69,13 +83,14 @@ void	supervisor(t_info *info)
 
 void	*monitor_routine(void *arg)
 {
-	t_philo	*philo = (t_philo *)arg;
-	t_info	*info = philo->info;
+	t_philo	*philo;
+	t_info	*info;
 	long	elapsed;
 
+	philo = (t_philo *)arg;
+	info = philo->info;
 	while (1)
 	{
-		
 		sem_wait(philo->meal_lock);
 		elapsed = get_current_time() - philo->last_meal;
 		sem_post(philo->meal_lock);
@@ -86,34 +101,5 @@ void	*monitor_routine(void *arg)
 			exit(1);
 		}
 		ft_usleep(1);
-	}
-}
-
-void	close_semaphores(t_info *info, t_philo *philos)
-{
-	int		i;
-	char	name[32];
-
-	if (info->forks)
-		sem_close(info->forks);
-	if (info->print)
-		sem_close(info->print);
-	if (info->stop)
-		sem_close(info->stop);
-	if (info->death)
-		sem_close(info->death);
-	if (info->ready)
-		sem_close(info->ready);
-	sem_unlink("/forks");
-	sem_unlink("/print");
-	sem_unlink("/stop");
-	sem_unlink("/death");
-	sem_unlink("/ready");
-	i = -1;
-	while (++i < info->philo_count)
-	{
-		join(name, "/meal_lock_", i + 1);
-		sem_close(philos[i].meal_lock);
-		sem_unlink(name);
 	}
 }

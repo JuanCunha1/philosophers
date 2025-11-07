@@ -8,7 +8,12 @@ LINKER  	    = -lpthread
 # Includes
 INCLUDES_DIR 	= include
 INCLUDES_FLAG 	= -I$(INCLUDES_DIR)
-INCLUDES		= $(wildcard $(INCLUDES_DIR)/*.h)
+INCLUDES		= $(wildcard $(INCLUDES_DIR)/philosopher.h)
+
+GREEN			= "\033[0;32m"
+YELLOW			= "\033[1;33m"
+RED				= "\033[0;31m"
+RESET			= "\033[0m"
 
 # Sources
 SRCS_DIR		= src/

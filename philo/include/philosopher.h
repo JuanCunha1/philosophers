@@ -85,7 +85,7 @@ void	*monitor_routine(void *arg);
 void	*philo_routine(void *arg);
 
 // simulation_helper
-int		pihlo_is_dead(t_philo *philo);
+int		philo_is_dead(t_philo *philo);
 void	philo_eat(t_philo *philo);
 int		meal_eaten(t_philo *philo);
 

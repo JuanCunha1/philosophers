@@ -12,6 +12,27 @@
 
 #include <philosopher.h>
 #include <unistd.h>
+#include <stdbool.h>
+
+static void	think_routine(t_philo *philo, bool silent)
+{
+	time_t	time_to_think;
+
+	pthread_mutex_lock(&philo->engine->meal_lock);
+	time_to_think = (philo->engine->time_to_die
+			- (get_current_time() - philo->times.last_meal)
+			- philo->engine->time_to_eat) / 2;
+	pthread_mutex_unlock(&philo->engine->meal_lock);
+	if (time_to_think < 0)
+		time_to_think = 0;
+	if (time_to_think == 0 && silent == true)
+		time_to_think = 1;
+	if (time_to_think > 600)
+		time_to_think = 200;
+	if (silent == false)
+		print_action(philo, "is thinking");
+	ft_usleep(philo, time_to_think);
+}
 
 void	*philo_routine(void *arg)
 {
@@ -19,19 +40,19 @@ void	*philo_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	if (philo->id % 2 == 0)
-		usleep(1000);
+		think_routine(philo, true);
 	while (1)
 	{
-		if (pihlo_is_dead(philo))
+		if (philo_is_dead(philo))
 			break ;
 		philo_eat(philo);
 		if (meal_eaten(philo))
 			break ;
 		print_action(philo, "is sleeping");
 		ft_usleep(philo, philo->engine->time_to_sleep);
-		if (pihlo_is_dead(philo))
+		if (philo_is_dead(philo))
 			break ;
-		print_action(philo, "is thinking");
+		think_routine(philo, false);
 	}
 	if (meal_eaten(philo))
 	{

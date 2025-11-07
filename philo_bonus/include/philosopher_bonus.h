@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philosopher_bonus.h                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jmarques <jmarques@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/07 12:46:56 by jmarques          #+#    #+#             */
+/*   Updated: 2025/11/07 12:46:57 by jmarques         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILOSOPHER_BONUS_H
 # define PHILOSOPHER_BONUS_H
 
@@ -47,12 +59,12 @@ void	join(char *dest, const char *prefix, int n);
 // destroy
 void	print_action(t_philo *philo, char *msg);
 
-void	philo_routine(t_philo *philo);
+void	philo_routine(t_philo *philo, t_info *info);
 void	*monitor_routine(void *arg);
 void	supervisor(t_info *info);
 
 void	one_philo(t_info *info, t_philo *philo);
-void	close_semaphores(t_info *info, t_philo *philos);
+
 void	init_philos(t_philo *philos, t_info *info);
 int		init_info(t_info *info);
 #endif

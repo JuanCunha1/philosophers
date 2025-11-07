@@ -13,7 +13,8 @@
 #include <philosopher.h>
 #include <unistd.h>
 
-static int	one_philo(t_philo *philo, pthread_mutex_t *first_fork)
+static int	take_forks(t_philo *philo, pthread_mutex_t *first_fork,
+	pthread_mutex_t *second_fork)
 {
 	pthread_mutex_lock(first_fork);
 	print_action(philo, "has taken a fork");
@@ -23,6 +24,8 @@ static int	one_philo(t_philo *philo, pthread_mutex_t *first_fork)
 		pthread_mutex_unlock(first_fork);
 		return (1);
 	}
+	pthread_mutex_lock(second_fork);
+	print_action(philo, "has taken a fork");
 	return (0);
 }
 
@@ -33,22 +36,21 @@ void	philo_eat(t_philo *philo)
 
 	first_fork = philo->mutexes.left_fork;
 	second_fork = philo->mutexes.right_fork;
-	if (one_philo(philo, first_fork))
+	if (take_forks(philo, first_fork, second_fork))
 		return ;
-	pthread_mutex_lock(second_fork);
-	print_action(philo, "has taken a fork");
-	print_action(philo, "is eating");
 	pthread_mutex_lock(&philo->engine->meal_lock);
 	philo->times.last_meal = get_current_time();
 	philo->meals_eaten++;
 	pthread_mutex_unlock(&philo->engine->meal_lock);
-	if (!meal_eaten(philo))
-		ft_usleep(philo, philo->engine->time_to_eat);
+	print_action(philo, "is eating");
+	ft_usleep(philo, philo->engine->time_to_eat);
 	pthread_mutex_unlock(second_fork);
 	pthread_mutex_unlock(first_fork);
+	if (meal_eaten(philo))
+		return ;
 }
 
-int	pihlo_is_dead(t_philo *philo)
+int	philo_is_dead(t_philo *philo)
 {
 	int	dead;
 

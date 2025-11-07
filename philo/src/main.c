@@ -77,13 +77,13 @@ static int	check_args(int ac, char **av, t_engine *en)
 		en->must_eat = ft_atoi(av[5]);
 	if (en->philo_count < 1)
 		return (error_message("Invalid philosopher count\n"));
-	else if (en->time_to_die < 1)
+	if (en->time_to_die < 1)
 		return (error_message("Invalid time_to_die\n"));
-	else if (en->time_to_eat < 1)
+	if (en->time_to_eat < 1)
 		return (error_message("Invalid time_to_eat\n"));
-	else if (en->time_to_sleep < 1)
+	if (en->time_to_sleep < 1)
 		return (error_message("Invalid time_to_sleep\n"));
-	else if (en->must_eat < -1)
+	if (en->must_eat < -1)
 		return (error_message("Invalid must_eat\n"));
 	return (1);
 }
